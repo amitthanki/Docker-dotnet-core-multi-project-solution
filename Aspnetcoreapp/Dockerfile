@@ -1,11 +1,16 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build-env
+FROM microsoft/dotnet:sdk AS build
 WORKDIR /app
+
+COPY *.csproj ./
+RUN dotnet restore
 
 COPY . ./
-RUN dotnet publish Aspnetcoreapp.csproj -c Release -o out
+RUN dotnet publish -c Release -o publishdir
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.2
+FROM microsoft/dotnet:aspnetcore-runtime AS runtime
+EXPOSE 5555
 WORKDIR /app
-COPY --from=build-env /app/Aspnetcoreapp/out .
-
+COPY --from=build /app/publishdir .
 ENTRYPOINT ["dotnet", "Aspnetcoreapp.dll"]
+
+
