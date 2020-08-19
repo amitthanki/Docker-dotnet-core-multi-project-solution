@@ -2,10 +2,10 @@ FROM microsoft/dotnet:sdk AS build
 WORKDIR /app
 
 COPY *.csproj ./
-RUN dotnet restore
+RUN dotnet restore Aspnetcoreapp.csproj
 
 COPY . ./
-RUN dotnet publish -c Release -o publishdir
+RUN dotnet publish Aspnetcoreapp.csproj -c Release -o publishdir
 
 FROM microsoft/dotnet:aspnetcore-runtime AS runtime
 EXPOSE 5555
